@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.lucky.mapper.UserMapper">
+    <select id="doLogin" resultType="cn.lucky.pojo.User">
+      SELECT * FROM `user` WHERE `username`=#{username} AND `password`=#{password}
+    </select>
+    <insert id="ins" parameterType="cn.lucky.pojo.User">
+     INSERT INTO `lucky`.`user` (`username`, `password`, `juId`) VALUES(#{username},#{password},#{juId})
+    </insert>
+</mapper>
