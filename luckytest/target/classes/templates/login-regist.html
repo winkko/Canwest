@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+<meta charset="UTF-8">
+<title>登录&注册</title>
+<!--图标样式-->
+<link rel='stylesheet' href='../css/all.min.css'>
+
+<link rel="stylesheet" href="../css/style.css">
+<style type="text/css">
+	.posirelative {
+		position: relative;
+	}
+	.select-out-div {
+		width: 160px;
+		overflow: hidden;
+	}
+	select.m-wrap {
+
+		background-color: #ffffff;
+		background-image: none !important;
+		filter: none !important;
+		border: 1px solid #e5e5e5;
+		outline: none;
+		height: 25px !important;
+		line-height: 25px;
+	}
+	/*.select-hide-span {*/
+		/*height: 25px;*/
+		/*position: absolute;*/
+		/*top: 0;*/
+		/*border-right: 1px solid #e5e5e5;*/
+		/*right: 0;*/
+		/*width: 20px!important;*/
+		/*z-index: 999;*/
+	/*}*/
+	.select-show-b {
+		border-color: #888 transparent transparent transparent;
+		border-style: solid;
+		border-width: 5px 4px 0 4px;
+		margin-left: -4px;
+		margin-top: 10px;
+		position: absolute;
+	}
+</style>
+</head>
+
+<body>
+
+  <h2>医疗管理系统</h2>
+<div class="container" id="container">
+	<div class="form-container sign-up-container">
+		<form id="regest" onsubmit="return reg()">
+			<h1>注册</h1>
+
+			<input type="username" name="username" id="form-username" placeholder="账号" />
+			<input type="password" name="password" id="form-password" placeholder="密码" />
+
+			<span class="setleft wid80"><span class="fyhbx"></span>*权限*</span>
+			<div class=" posirelative select-out-div">
+				<select class="m-wrap" name="juId" id="juId" style="width: 140px; padding: 2px 0;">
+					<option value="1">医生</option>
+					<option value="2">患者</option>
+					<option value="3">管理员</option>
+				</select>
+				<!--<span class="select-hide-span" ><b class="select-show-b"></b></span>-->
+			</div>
+			<br/>
+
+			<div>
+			<button type="submit">注册</button><button type="reset">重置</button>
+			</div>
+			<span id="Err2" style="color: red"></span>
+		</form>
+	</div>
+	<div class="form-container sign-in-container">
+		<form  id="login" action="/user/doLogin" onsubmit="return valForm()">
+			<h1>登录</h1>
+
+			<input type="username" id="username" name="username" placeholder="账号" required="required" onblur="valname()" value="admin"/>
+
+			<input type="password" id="password" name="password" placeholder="密码" required="required" onblur="valpass()" value="1234"/>
+
+			<div>
+				<button type="submit">登录</button><button type="reset">重置</button>
+			</div>
+			<span id="Err" style="color: red"></span>
+		</form>
+	</div>
+	<div class="overlay-container">
+		<div class="overlay">
+			<div class="overlay-panel overlay-left">
+				<h1>欢迎回来！</h1>
+				<p>请您先登录的个人信息，进行操作。</p>
+				<button class="ghost" id="signIn">登录</button>
+			</div>
+			<div class="overlay-panel overlay-right">
+				<h1>你好朋友！</h1>
+				<p>输入您的个人信息注册。</p>
+				<button  class="ghost" id="signUp">注册</button>
+			</div>
+		</div>
+	</div>
+</div>
+  <!--<script src="../static/js/layui.all.js"></script>-->
+
+  <script src="../js/jquery-3.3.1.min.js"></script>
+  <script type="text/javascript">
+	  function reg() {
+          var username = document.getElementById("form-username").value;
+		  var password = document.getElementById("form-password").value;
+		  var juId=document.getElementById("juId").value;
+          $.ajax({
+              url: "/user/reg",    //reg是注册接口
+              type:'GET',
+              dataType:'json',
+              contentType:'application/json;charset=utf-8',
+              data:{"username":username,"password":password,juId:juId},
+              success: function (data) {
+                  console.log(data)
+                  alert(data)
+                  if (data=="注册成功") {
+                      alert('注册成功！！！\n请返回登录页面进行登录或继续注册')
+                      location.href="/login/index";
+                  }else{
+                      $("#Err2").text(data);
+                  }
+              },
+              error: function (XMLHttpRequest, textStatus, errorThrown) {
+                  console.log('XMLHttpRequest:');
+                  console.log(XMLHttpRequest);
+                  alert('网络异常！尝试刷新网页解决问题')
+              }
+
+          });
+          return false;
+      }
+
+
+      //
+      // //  注册
+      // function regest() {
+      //     var username = document.getElementById("form-username").value;
+      //     var password = document.getElementById("form-password").value;
+      //     var juId=document.getElementById("juId").value;
+      //     $.ajax({
+      //         url: "/user/regest",    //reg是注册接口
+      //         type:'GET',
+      //         dataType:'json',
+      //         contentType:'application/json',
+      //         data:{"username":username},
+      //         success: function (result) {
+      //             alert(result)
+      //             if (result=="注册成功") {
+      //                 alert('注册成功！！！\n请返回登录页面进行登录或继续注册')
+      //                 location.href="/login/index";
+      //             }else{
+      //                 $("#Err2").text(result);
+		// 		  }
+      //         },
+      //         error: function (XMLHttpRequest, textStatus, errorThrown) {
+      //             console.log('XMLHttpRequest:');
+      //             console.log(XMLHttpRequest);
+      //             alert('网络异常！尝试刷新网页解决问题')
+      //         }
+      //
+      //     });
+      //     return false;
+      // }
+      function valname()
+      {
+          var username=document.getElementById("username");
+          var userErr=document.getElementById("Err");
+
+          if(username.value.replace(/\s/g,"")=="")
+          {
+              userErr.innerHTML="用户名不能为空";
+              return false;
+          }else
+          {
+              username.value=username.value.replace(/\s/g,"");//除去空格
+              userErr.innerHTML="";
+              return true;
+          }
+      }
+      //验证密码
+      function valpass()
+      {
+          var password=document.getElementById("password");
+          var passErr=document.getElementById("Err");
+
+          if(password.value.replace(/\s/g,"")=="")
+          {
+              passErr.innerHTML="密码不能为空";
+              return false;
+          }else
+          {
+              password.value=password.value.replace(/\s/g,"");//除去空格
+              passErr.innerHTML="";
+              return true;
+          }
+      }
+      //提交验证
+      function valForm()
+      {
+          if(valname()==true && valpass()==true)
+          {
+              return true;
+          }else
+          {
+              return false;
+          }
+      }
+  </script>
+
+<script  src="../js/index.js"></script>
+</body>
+
+</html>
